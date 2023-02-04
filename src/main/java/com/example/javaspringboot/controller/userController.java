@@ -2,7 +2,10 @@ package com.example.javaspringboot.controller;
 
 import java.util.List;
 
+import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,8 +40,13 @@ public class userController {
 	}
 	
 	@PostMapping("/users/signup")
-	public Users SignUp(@RequestBody Users user) {
-		userMapper.insert(user);
-		return user;
+	public ResponseEntity<?> SignUp(@RequestBody Users user) {
+		if(user.getUsersId() == null) {
+			return ResponseEntity.status(405).body("UserId can not be null");
+		}
+		else {
+			userMapper.insert(user);
+			return ResponseEntity.status(200).body(user);
+		}
 	}
 }
